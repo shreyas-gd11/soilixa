@@ -22,9 +22,11 @@
       <nav class="nav-links">
         <a href="#about">About</a>
         <a href="#services">Services</a>
+        <a href="#fertilizers">🌱 Fertilizers</a>
         <a href="#how-it-works">How It Works</a>
         <a href="#why-us">Why Us</a>
         <a href="#contact">Contact</a>
+        <a class="cart-link" href="#cart">Cart <span id="cartCount">0</span></a>
       </nav>
     </div>
   </header>
@@ -114,6 +116,109 @@
           <h3>Fertilizer &amp; Nutrient Advice</h3>
           <p>Use balanced nutrient plans to improve growth while avoiding unnecessary fertilizer use.</p>
         </article>
+      </div>
+    </section>
+
+    <section id="fertilizers" class="fertilizers section-pad reveal">
+      <div class="container marketplace-head">
+        <div class="section-head">
+          <p class="eyebrow">Fertilizer Marketplace</p>
+          <h2>Recommended Inputs, Ready to Order</h2>
+          <p class="marketplace-copy">Browse verified products, compare pack sizes and prices, and complete your order directly through Soilixa.</p>
+        </div>
+        <a class="btn-secondary" href="#soil-recommendations">Recommended for Your Crop</a>
+      </div>
+
+      <div class="container marketplace-tools">
+        <label class="search-wrap" for="fertilizerSearch">
+          <span>Search fertilizers</span>
+          <input id="fertilizerSearch" type="search" placeholder="Search AZOIS, Borax, Humic, Calcium">
+        </label>
+        <div class="filter-group" aria-label="Filter products by category">
+          <button class="filter-chip active" type="button" data-category="All">All</button>
+          <button class="filter-chip" type="button" data-category="Organic Manure">Organic Manure</button>
+          <button class="filter-chip" type="button" data-category="Biofertilizers">Biofertilizers</button>
+          <button class="filter-chip" type="button" data-category="Plant Growth Promoters">Plant Growth Promoters</button>
+          <button class="filter-chip" type="button" data-category="Micronutrients">Micronutrients</button>
+          <button class="filter-chip" type="button" data-category="Soil Conditioners">Soil Conditioners</button>
+        </div>
+      </div>
+
+      <div class="container marketplace-state" id="fertilizerState" aria-live="polite"></div>
+      <div class="container products-grid" id="productsGrid"></div>
+    </section>
+
+    <section id="product-detail" class="product-detail section-pad" hidden>
+      <div class="container" id="productDetail"></div>
+    </section>
+
+    <section id="soil-recommendations" class="soil-recommendations section-pad reveal">
+      <div class="container recommendation-shell">
+        <div class="section-head">
+          <p class="eyebrow">Soil Analysis Integration</p>
+          <h2>Recommended Fertilizers for Your Crop</h2>
+          <p class="marketplace-copy">Example recommendation generated after soil analysis for Sugarcane.</p>
+        </div>
+        <div class="crop-badge">Sugarcane</div>
+        <div class="recommendation-grid" id="recommendationGrid"></div>
+      </div>
+    </section>
+
+    <section id="cart" class="cart-checkout section-pad reveal">
+      <div class="container checkout-layout">
+        <div>
+          <div class="section-head">
+            <p class="eyebrow">Your Order</p>
+            <h2>Shopping Cart</h2>
+          </div>
+          <div class="cart-panel" id="cartItems"></div>
+        </div>
+        <div>
+          <div class="section-head">
+            <p class="eyebrow">Checkout</p>
+            <h2>Delivery Details</h2>
+          </div>
+          <form id="checkoutForm" class="checkout-form" novalidate>
+            <label for="farmerName">Farmer Name</label>
+            <input id="farmerName" name="farmerName" type="text" required>
+
+            <label for="mobileNumber">Mobile Number</label>
+            <input id="mobileNumber" name="mobileNumber" type="tel" required>
+
+            <label for="deliveryAddress">Delivery Address</label>
+            <textarea id="deliveryAddress" name="deliveryAddress" rows="3" required></textarea>
+
+            <div class="form-grid">
+              <div>
+                <label for="village">Village</label>
+                <input id="village" name="village" type="text" required>
+              </div>
+              <div>
+                <label for="taluk">Taluk</label>
+                <input id="taluk" name="taluk" type="text" required>
+              </div>
+              <div>
+                <label for="district">District</label>
+                <input id="district" name="district" type="text" required>
+              </div>
+              <div>
+                <label for="state">State</label>
+                <input id="state" name="state" type="text" required>
+              </div>
+              <div>
+                <label for="pinCode">PIN Code</label>
+                <input id="pinCode" name="pinCode" type="text" inputmode="numeric" required>
+              </div>
+            </div>
+
+            <div class="order-summary" id="orderSummary"></div>
+            <div class="payment-placeholder">
+              Razorpay/UPI payment integration is prepared for a future backend connection.
+            </div>
+            <button class="btn-primary" type="submit">Place Order</button>
+            <p id="checkoutStatus" class="form-status" aria-live="polite"></p>
+          </form>
+        </div>
       </div>
     </section>
 
