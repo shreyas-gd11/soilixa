@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout - Soilixa</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="container section-pad">
+    <h1>Checkout</h1>
+    <form id="checkoutForm" class="checkout-form">
+      <div>
+        <label>Name*</label>
+        <input name="customer_name" required>
+      </div>
+      <div>
+        <label>Phone*</label>
+        <input name="phone" required>
+      </div>
+      <div>
+        <label>Email</label>
+        <input name="email" type="email">
+      </div>
+      <div>
+        <label>Village</label>
+        <input name="village">
+      </div>
+      <div>
+        <label>Taluk</label>
+        <input name="taluk">
+      </div>
+      <div>
+        <label>District</label>
+        <input name="district">
+      </div>
+      <div>
+        <label>State</label>
+        <input name="state">
+      </div>
+      <div>
+        <label>PIN Code</label>
+        <input name="pincode">
+      </div>
+      <div>
+        <label>Address*</label>
+        <textarea name="address" required></textarea>
+      </div>
+      <div>
+        <label>Order Notes</label>
+        <textarea name="order_notes"></textarea>
+      </div>
+      <div id="checkoutSummary"></div>
+      <div id="checkoutStatus" class="form-status"></div>
+      <button type="submit" class="btn-primary">Pay Now</button>
+    </form>
+  </main>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

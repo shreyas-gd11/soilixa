@@ -1,70 +1,44 @@
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
-const { getFertilizerById, getFertilizers } = require("./api/fertilizers/repository");
+// Express-based server with API routes for Supabase and Razorpay integration
+const express = require('express');
+const path = require('path');
+const cors = require('cors');
+const dotenv = require('dotenv');
 
-const root = __dirname;
+dotenv.config();
+
+const app = express();
 const port = process.env.PORT || 3000;
 
-const mimeTypes = {
-  ".html": "text/html; charset=utf-8",
-  ".css": "text/css; charset=utf-8",
-  ".js": "text/javascript; charset=utf-8",
-  ".json": "application/json; charset=utf-8",
-  ".png": "image/png",
-  ".jpg": "image/jpeg",
-  ".jpeg": "image/jpeg",
-  ".svg": "image/svg+xml"
-};
+app.use(cors());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true }));
 
-function sendJson(response, statusCode, payload) {
-  response.writeHead(statusCode, { "Content-Type": "application/json; charset=utf-8" });
-  response.end(JSON.stringify(payload));
-}
+// Static files (public root)
+app.use(express.static(path.join(__dirname)));
 
-function serveStatic(requestPath, response) {
-  const safePath = path.normalize(requestPath === "/" ? "/index.html" : requestPath).replace(/^(\.\.[/\\])+/, "");
-  const filePath = path.join(root, safePath);
+// API routes
+app.use('/api/products', require('./routes/products'));
+app.use('/api/payment', require('./routes/payment'));
+app.use('/api/orders', require('./routes/orders'));
 
-  if (!filePath.startsWith(root)) {
-    response.writeHead(403);
-    response.end("Forbidden");
-    return;
-  }
+// Public config (only non-secret values)
+app.get('/api/config', (req, res) => {
+  res.json({ razorpayKeyId: process.env.RAZORPAY_KEY_ID || null });
+});
 
-  fs.readFile(filePath, (error, content) => {
-    if (error) {
-      response.writeHead(404);
-      response.end("Not found");
-      return;
-    }
-
-    response.writeHead(200, { "Content-Type": mimeTypes[path.extname(filePath)] || "application/octet-stream" });
-    response.end(content);
+// keep old fertilizer endpoints for backward compatibility
+const fertilizersRepoPath = path.join(__dirname, 'api', 'fertilizers', 'repository.js');
+try {
+  const { getFertilizerById, getFertilizers } = require('./api/fertilizers/repository');
+  app.get('/api/fertilizers', (req, res) => res.json(getFertilizers({ category: req.query.category, crop: req.query.crop })));
+  app.get('/api/fertilizers/:id', (req, res) => {
+    const p = getFertilizerById(req.params.id);
+    if (!p) return res.status(404).json({ error: 'Fertilizer not found' });
+    res.json(p);
   });
+} catch (err) {
+  // ignore if repository not available
 }
 
-const server = http.createServer((request, response) => {
-  const url = new URL(request.url, `http://${request.headers.host}`);
+app.listen(port, () => console.log(`Soilixa server running at http://localhost:${port}`));
 
-  if (url.pathname === "/api/fertilizers") {
-    sendJson(response, 200, getFertilizers({
-      category: url.searchParams.get("category"),
-      crop: url.searchParams.get("crop")
-    }));
-    return;
-  }
-
-  if (url.pathname.startsWith("/api/fertilizers/")) {
-    const id = decodeURIComponent(url.pathname.replace("/api/fertilizers/", ""));
-    const product = getFertilizerById(id);
-    sendJson(response, product ? 200 : 404, product || { error: "Fertilizer not found" });
-    return;
-  }
-
-  serveStatic(url.pathname, response);
-});
-
-server.listen(port, () => {
-  console.log(`Soilixa site running at http://localhost:${port}`);
-});

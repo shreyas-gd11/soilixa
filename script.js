@@ -71,8 +71,12 @@ async function loadFertilizers() {
   showSkeletons();
 
   try {
-    const response = await fetch("data/fertilizers.json");
-    if (!response.ok) throw new Error("Could not load fertilizer catalog.");
+    // Try API first (Supabase-backed). Fallback to local JSON for dev/offline.
+    let response = await fetch('/api/products');
+    if (!response.ok) {
+      response = await fetch('data/fertilizers.json');
+    }
+    if (!response.ok) throw new Error('Could not load fertilizer catalog.');
     fertilizers = await response.json();
     fertilizerState.textContent = "";
     renderProducts();
@@ -85,6 +89,168 @@ async function loadFertilizers() {
       fertilizerState.innerHTML = `<div class="state-card error-state">Unable to load fertilizers. Please try again after refreshing the page.</div>`;
     }
   }
+}
+
+function computeTotals() {
+  const rows = getCartRows();
+  const subtotal = rows.reduce((s, r) => s + r.product.price * r.quantity, 0);
+  const gst = +(subtotal * 0.18).toFixed(2); // 18% GST
+  const delivery_charge = subtotal > 1000 ? 0 : 50; // simple rule
+  const total = +(subtotal + gst + delivery_charge).toFixed(2);
+  return { subtotal, gst, delivery_charge, total };
+}
+
+async function createRazorpayOrder(amount) {
+  const resp = await fetch('/api/payment/create-order', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ amount })
+  });
+  if (!resp.ok) throw new Error('Unable to create payment order');
+  return resp.json();
+}
+
+async function verifyPayment(payload) {
+  const resp = await fetch('/api/payment/verify', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+  return resp.json();
+}
+
+async function saveOrderToServer(orderPayload) {
+  const resp = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(orderPayload) });
+  if (!resp.ok) throw new Error('Failed to save order');
+  return resp.json();
+}
+
+// Checkout form handling when present on checkout.html
+if (document.location.pathname.endsWith('/checkout.html') && checkoutForm) {
+  const summaryEl = document.getElementById('checkoutSummary');
+  function renderCheckoutSummary() {
+    const rows = getCartRows();
+    if (!rows.length) return summaryEl.innerHTML = '<p>Your cart is empty.</p>';
+    const totals = computeTotals();
+    summaryEl.innerHTML = `
+      <h3>Summary</h3>
+      ${rows.map(r=>`<p>${r.product.name} x ${r.quantity} <strong>${formatPrice(r.product.price * r.quantity)}</strong></p>`).join('')}
+      <p>Subtotal: <strong>${formatPrice(totals.subtotal)}</strong></p>
+      <p>GST: <strong>${formatPrice(totals.gst)}</strong></p>
+      <p>Delivery: <strong>${formatPrice(totals.delivery_charge)}</strong></p>
+      <p class="summary-total">Grand Total: <strong>${formatPrice(totals.total)}</strong></p>
+    `;
+  }
+  renderCheckoutSummary();
+
+  checkoutForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (!getCartRows().length) return checkoutStatus.textContent = 'Cart is empty.';
+    if (!checkoutForm.checkValidity()) return checkoutStatus.textContent = 'Please complete required fields.';
+
+    checkoutStatus.textContent = 'Creating payment...';
+    try {
+      const totals = computeTotals();
+      const razorOrder = await createRazorpayOrder(totals.total);
+
+      // fetch razorpay key id from server (public)
+      const cfgResp = await fetch('/api/config');
+      const cfg = cfgResp.ok ? await cfgResp.json() : {};
+
+      const options = {
+        key: cfg.razorpayKeyId || '',
+        amount: razorOrder.amount,
+        currency: razorOrder.currency,
+        name: 'Soilixa',
+        description: 'Order Payment',
+        order_id: razorOrder.id,
+        handler: async function (response) {
+          // Verify signature on server
+          checkoutStatus.textContent = 'Verifying payment...';
+          const verification = await verifyPayment({
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_signature: response.razorpay_signature
+          });
+
+          if (!verification.verified) {
+            checkoutStatus.textContent = 'Payment verification failed.';
+            return;
+          }
+
+          // Save order to DB
+          const form = new FormData(checkoutForm);
+          const payload = Object.fromEntries(form.entries());
+          const items = getCartRows().map((r) => ({ product_id: r.product.id, name: r.product.name, price: r.product.price, quantity: r.quantity, total: +(r.product.price * r.quantity).toFixed(2) }));
+          const orderPayload = {
+            ...payload,
+            items,
+            subtotal: totals.subtotal,
+            gst: totals.gst,
+            delivery_charge: totals.delivery_charge,
+            total_amount: totals.total,
+            payment_status: 'paid',
+            payment_method: 'razorpay',
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_payment_id: response.razorpay_payment_id
+          };
+
+          const saved = await saveOrderToServer(orderPayload);
+
+          // Clear cart and redirect to success page
+          cart = [];
+          saveCart();
+          window.location.href = `order-success.html?order=${encodeURIComponent(saved.order.order_number)}`;
+        },
+        modal: { escape: true }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+      checkoutStatus.textContent = 'Payment window opened.';
+    } catch (err) {
+      checkoutStatus.textContent = err.message || 'Payment initialization failed.';
+    }
+  });
+}
+
+// Order success page rendering
+if (document.location.pathname.endsWith('/order-success.html')) {
+  const params = new URLSearchParams(window.location.search);
+  const orderNum = params.get('order');
+  const successMessage = document.getElementById('successMessage');
+  const orderDetails = document.getElementById('orderDetails');
+  const downloadInvoice = document.getElementById('downloadInvoice');
+  const printInvoice = document.getElementById('printInvoice');
+
+  async function loadOrder() {
+    if (!orderNum) return successMessage.textContent = 'Order not found.';
+    const resp = await fetch(`/api/orders/${encodeURIComponent(orderNum)}`);
+    if (!resp.ok) return successMessage.textContent = 'Unable to load order.';
+    const data = await resp.json();
+    const { order, items } = data;
+    successMessage.innerHTML = `<p>Thank you. Your order <strong>${order.order_number}</strong> is confirmed.</p><p>Payment: ${order.payment_status} · ${order.razorpay_payment_id || ''}</p>`;
+    orderDetails.innerHTML = `
+      <h3>Order Details</h3>
+      <p>${order.customer_name} · ${order.phone}</p>
+      <p>${order.address}</p>
+      <div>${items.map(it=>`<p>${it.product_name} x ${it.quantity} · ₹${it.total}</p>`).join('')}</div>
+      <p>Total Paid: ₹${order.total_amount}</p>
+    `;
+
+    downloadInvoice?.addEventListener('click', async () => {
+      const invResp = await fetch(`/api/orders/${encodeURIComponent(orderNum)}/invoice`);
+      if (!invResp.ok) return alert('Unable to download invoice');
+      const blob = await invResp.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Invoice-${order.order_number}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    printInvoice?.addEventListener('click', () => window.print());
+  }
+
+  loadOrder();
 }
 
 function getFilteredProducts() {
