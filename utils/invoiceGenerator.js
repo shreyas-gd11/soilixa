@@ -34,11 +34,10 @@ function generateInvoice(order, items, callback) {
     doc.text(`${it.product_name} — ${it.quantity} x ₹${it.price} = ₹${it.total}`);
   });
 
+  const totalAmount = Number(order.total_amount ?? 0);
+
   doc.moveDown();
-  doc.text(`Subtotal: ₹${order.subtotal}`);
-  doc.text(`GST: ₹${order.gst}`);
-  doc.text(`Delivery: ₹${order.delivery_charge}`);
-  doc.fontSize(12).text(`Total: ₹${order.total_amount}`, { underline: true });
+  doc.fontSize(12).text(`Grand Total: ₹${totalAmount}`, { underline: true });
 
   doc.moveDown(2);
   doc.fontSize(10).text('Thank you for purchasing from Soilixa.', { align: 'center' });

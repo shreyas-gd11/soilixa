@@ -9,6 +9,13 @@ create table if not exists products (
   name text not null,
   category text,
   description text,
+  short_description text,
+  crop text,
+  growth_stage text,
+  source_category text,
+  recommended_crops text[],
+  badges text[],
+  benefits text[],
   price numeric(12,2) not null,
   unit text,
   image_url text,
@@ -36,10 +43,9 @@ create table if not exists orders (
   delivery_charge numeric(12,2),
   gst numeric(12,2),
   total_amount numeric(12,2),
-  payment_status text,
-  payment_method text,
-  razorpay_order_id text,
-  razorpay_payment_id text,
+  payment_status text default 'Pending Payment Verification',
+  payment_method text default 'UPI',
+  order_status text default 'New',
   created_at timestamptz default now()
 );
 
@@ -47,7 +53,7 @@ create table if not exists orders (
 create table if not exists order_items (
   id uuid primary key default gen_random_uuid(),
   order_id uuid references orders(id) on delete cascade,
-  product_id uuid,
+  product_id uuid references products(id),
   product_name text,
   price numeric(12,2),
   quantity integer,

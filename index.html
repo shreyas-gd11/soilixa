@@ -24,19 +24,26 @@
   <header class="site-header">
     <div class="container nav-wrap">
       <a class="logo" href="#home">Soilixa</a>
+      <div class="header-actions">
+        <div class="lang-switcher" role="group" aria-label="Language switcher">
+          <button type="button" class="header-pill active" data-lang="en">🌐 English</button>
+          <button type="button" class="header-pill" data-lang="kn">ಕನ್ನಡ</button>
+        </div>
+        <button type="button" class="header-pill theme-toggle" id="themeToggle" aria-pressed="false">☀️ Light</button>
+      </div>
       <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false">
         <span></span>
         <span></span>
         <span></span>
       </button>
       <nav class="nav-links">
-        <a href="#about">About</a>
-        <a href="#services">Services</a>
-        <a href="#fertilizers">🌱 Fertilizers</a>
-        <a href="#how-it-works">How It Works</a>
-        <a href="#why-us">Why Us</a>
-        <a href="#contact">Contact</a>
-        <a class="cart-link" href="#cart">Cart <span id="cartCount">0</span></a>
+        <a href="#about" data-i18n="nav.about">About</a>
+        <a href="#services" data-i18n="nav.services">Services</a>
+        <a href="#fertilizers" data-i18n="nav.fertilizers">🌱 Fertilizers</a>
+        <a href="#how-it-works" data-i18n="nav.howItWorks">How It Works</a>
+        <a href="#why-us" data-i18n="nav.whyUs">Why Us</a>
+        <a href="#contact" data-i18n="nav.contact">Contact</a>
+        <a class="cart-link" href="#cart"><span data-i18n="nav.cart">Cart</span> <span id="cartCount">0</span></a>
       </nav>
     </div>
   </header>
@@ -45,26 +52,21 @@
     <section class="hero section-pad reveal">
       <div class="container hero-grid">
         <div class="hero-content">
-          <p class="eyebrow">Data-Driven Agriculture</p>
-          <h1>Smart Farming Starts with Healthy Soil</h1>
-          <p class="hero-subtitle">Soilixa helps farmers with soil testing, crop guidance, and scientific farming advice.</p>
-          <a class="btn-primary" href="#contact">Get Started</a>
+          <p class="eyebrow" data-i18n="hero.eyebrow">Data-Driven Agriculture</p>
+          <h1 data-i18n="hero.title">Smart Farming Starts with Healthy Soil</h1>
+          <p class="hero-subtitle" data-i18n="hero.subtitle">Soilixa helps farmers with soil testing, crop guidance, and scientific farming advice.</p>
+          <a class="btn-primary" href="#contact" data-i18n="hero.cta">Get Started</a>
         </div>
         <div class="hero-visual" aria-hidden="true">
           <div class="soil-card">
-            <p class="soil-card-title">Field Health Snapshot</p>
-            <div class="meter">
-              <span>Soil Quality</span>
-              <strong>84%</strong>
-            </div>
-            <div class="meter">
-              <span>Nutrient Balance</span>
-              <strong>78%</strong>
-            </div>
-            <div class="meter">
-              <span>Crop Suitability</span>
-              <strong>91%</strong>
-            </div>
+            <p class="soil-card-title" data-i18n="promise.title">Our Promise to Farmers</p>
+            <p class="promise-copy" data-i18n="promise.subtitle">Helping Farmers Grow Better with Trusted Organic Solutions.</p>
+            <ul class="promise-list">
+              <li data-i18n="promise.item1">Premium Quality Fertilizers</li>
+              <li data-i18n="promise.item2">Farmer-First Support</li>
+              <li data-i18n="promise.item3">Supporting Sustainable Farming</li>
+              <li data-i18n="promise.item4">Trusted Service</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -72,15 +74,15 @@
 
     <section id="about" class="about section-pad reveal">
       <div class="container section-head">
-        <p class="eyebrow">About Soilixa</p>
-        <h2>Helping Farmers Make Better Decisions</h2>
+        <p class="eyebrow" data-i18n="about.eyebrow">About Soilixa</p>
+        <h2 data-i18n="about.title">Helping Farmers Make Better Decisions</h2>
       </div>
       <div class="container about-copy">
-        <p>
+        <p data-i18n="about.copy1">
           Soilixa is an early-stage agriculture startup focused on helping farmers improve yield through practical soil-based decisions.
           We combine soil data with expert guidance so farmers can choose the right crop strategy at the right time.
         </p>
-        <p>
+        <p data-i18n="about.copy2">
           Our mission is to support sustainable and efficient farming with easy-to-understand recommendations that work in real field conditions.
         </p>
       </div>
@@ -88,8 +90,8 @@
 
     <section id="services" class="services section-pad reveal">
       <div class="container section-head">
-        <p class="eyebrow">Our Services</p>
-        <h2>Simple Support, Strong Results</h2>
+        <p class="eyebrow" data-i18n="services.eyebrow">Our Services</p>
+        <h2 data-i18n="services.title">Simple Support, Strong Results</h2>
       </div>
       <div class="container cards-grid">
         <article class="card">
@@ -99,8 +101,8 @@
               <path d="M5 6h14v10H5z"></path>
             </svg>
           </div>
-          <h3>Soil Analysis &amp; Insights</h3>
-          <p>Understand soil health, nutrient levels, and key factors affecting crop productivity.</p>
+          <h3 data-i18n="services.card1Title">Soil Analysis &amp; Insights</h3>
+          <p data-i18n="services.card1Text">Understand soil health, nutrient levels, and key factors affecting crop productivity.</p>
         </article>
 
         <article class="card">
@@ -111,8 +113,8 @@
               <path d="M7 16c1.2 2.4 2.8 3.6 5 3.6s3.8-1.2 5-3.6"></path>
             </svg>
           </div>
-          <h3>Crop Recommendation Guidance</h3>
-          <p>Get crop suggestions based on local conditions, soil type, and field goals.</p>
+          <h3 data-i18n="services.card2Title">Crop Recommendation Guidance</h3>
+          <p data-i18n="services.card2Text">Get crop suggestions based on local conditions, soil type, and field goals.</p>
         </article>
 
         <article class="card">
@@ -123,8 +125,8 @@
               <path d="M6 22h12"></path>
             </svg>
           </div>
-          <h3>Fertilizer &amp; Nutrient Advice</h3>
-          <p>Use balanced nutrient plans to improve growth while avoiding unnecessary fertilizer use.</p>
+          <h3 data-i18n="services.card3Title">Fertilizer &amp; Nutrient Advice</h3>
+          <p data-i18n="services.card3Text">Use balanced nutrient plans to improve growth while avoiding unnecessary fertilizer use.</p>
         </article>
       </div>
     </section>
@@ -132,25 +134,25 @@
     <section id="fertilizers" class="fertilizers section-pad reveal">
       <div class="container marketplace-head">
         <div class="section-head">
-          <p class="eyebrow">Fertilizer Marketplace</p>
-          <h2>Recommended Inputs, Ready to Order</h2>
-          <p class="marketplace-copy">Browse verified products, compare pack sizes and prices, and complete your order directly through Soilixa.</p>
+          <p class="eyebrow" data-i18n="marketplace.eyebrow">Fertilizer Marketplace</p>
+          <h2 data-i18n="marketplace.title">Recommended Inputs, Ready to Order</h2>
+          <p class="marketplace-copy" data-i18n="marketplace.copy">Browse verified products, compare pack sizes and prices, and complete your order directly through Soilixa.</p>
         </div>
-        <a class="btn-secondary" href="#soil-recommendations">Recommended for Your Crop</a>
+        <a class="btn-secondary" href="#contact" data-i18n="marketplace.cta">Need Help Choosing Fertilizers</a>
       </div>
 
       <div class="container marketplace-tools">
         <label class="search-wrap" for="fertilizerSearch">
-          <span>Search fertilizers</span>
-          <input id="fertilizerSearch" type="search" placeholder="Search AZOIS, Borax, Humic, Calcium">
+          <span data-i18n="marketplace.searchLabel">Search fertilizers</span>
+          <input id="fertilizerSearch" type="search" placeholder="Search AZOIS, Borax, Humic, Calcium" data-i18n-placeholder="marketplace.searchPlaceholder">
         </label>
         <div class="filter-group" aria-label="Filter products by category">
-          <button class="filter-chip active" type="button" data-category="All">All</button>
-          <button class="filter-chip" type="button" data-category="Organic Manure">Organic Manure</button>
-          <button class="filter-chip" type="button" data-category="Biofertilizers">Biofertilizers</button>
-          <button class="filter-chip" type="button" data-category="Plant Growth Promoters">Plant Growth Promoters</button>
-          <button class="filter-chip" type="button" data-category="Micronutrients">Micronutrients</button>
-          <button class="filter-chip" type="button" data-category="Soil Conditioners">Soil Conditioners</button>
+          <button class="filter-chip active" type="button" data-category="All" data-i18n="marketplace.filterAll">All</button>
+          <button class="filter-chip" type="button" data-category="Organic Manure" data-i18n="marketplace.filterOrganic">Organic Manure</button>
+          <button class="filter-chip" type="button" data-category="Biofertilizers" data-i18n="marketplace.filterBio">Biofertilizers</button>
+          <button class="filter-chip" type="button" data-category="Plant Growth Promoters" data-i18n="marketplace.filterGrowth">Plant Growth Promoters</button>
+          <button class="filter-chip" type="button" data-category="Micronutrients" data-i18n="marketplace.filterMicronutrients">Micronutrients</button>
+          <button class="filter-chip" type="button" data-category="Soil Conditioners" data-i18n="marketplace.filterSoil">Soil Conditioners</button>
         </div>
       </div>
 
@@ -162,70 +164,59 @@
       <div class="container" id="productDetail"></div>
     </section>
 
-    <section id="soil-recommendations" class="soil-recommendations section-pad reveal">
-      <div class="container recommendation-shell">
-        <div class="section-head">
-          <p class="eyebrow">Soil Analysis Integration</p>
-          <h2>Recommended Fertilizers for Your Crop</h2>
-          <p class="marketplace-copy">Example recommendation generated after soil analysis for Sugarcane.</p>
-        </div>
-        <div class="crop-badge">Sugarcane</div>
-        <div class="recommendation-grid" id="recommendationGrid"></div>
-      </div>
-    </section>
-
     <section id="cart" class="cart-checkout section-pad reveal">
       <div class="container checkout-layout">
         <div>
           <div class="section-head">
-            <p class="eyebrow">Your Order</p>
-            <h2>Shopping Cart</h2>
+            <p class="eyebrow" data-i18n="checkout.orderEyebrow">Your Order</p>
+            <h2 data-i18n="checkout.cartTitle">Shopping Cart</h2>
           </div>
           <div class="cart-panel" id="cartItems"></div>
         </div>
         <div>
           <div class="section-head">
-            <p class="eyebrow">Checkout</p>
-            <h2>Delivery Details</h2>
+            <p class="eyebrow" data-i18n="checkout.checkoutEyebrow">Checkout</p>
+            <h2 data-i18n="checkout.checkoutTitle">Delivery Details</h2>
           </div>
           <form id="checkoutForm" class="checkout-form" novalidate>
-            <label for="farmerName">Farmer Name</label>
+            <label for="farmerName" data-i18n="checkout.farmerName">Farmer Name</label>
             <input id="farmerName" name="farmerName" type="text" required>
 
-            <label for="mobileNumber">Mobile Number</label>
+            <label for="mobileNumber" data-i18n="checkout.mobileNumber">Mobile Number</label>
             <input id="mobileNumber" name="mobileNumber" type="tel" required>
 
-            <label for="deliveryAddress">Delivery Address</label>
+            <label for="deliveryAddress" data-i18n="checkout.deliveryAddress">Delivery Address</label>
             <textarea id="deliveryAddress" name="deliveryAddress" rows="3" required></textarea>
 
             <div class="form-grid">
               <div>
-                <label for="village">Village</label>
+                <label for="village" data-i18n="checkout.village">Village</label>
                 <input id="village" name="village" type="text" required>
               </div>
               <div>
-                <label for="taluk">Taluk</label>
+                <label for="taluk" data-i18n="checkout.taluk">Taluk</label>
                 <input id="taluk" name="taluk" type="text" required>
               </div>
               <div>
-                <label for="district">District</label>
+                <label for="district" data-i18n="checkout.district">District</label>
                 <input id="district" name="district" type="text" required>
               </div>
               <div>
-                <label for="state">State</label>
+                <label for="state" data-i18n="checkout.state">State</label>
                 <input id="state" name="state" type="text" required>
               </div>
               <div>
-                <label for="pinCode">PIN Code</label>
+                <label for="pinCode" data-i18n="checkout.pinCode">PIN Code</label>
                 <input id="pinCode" name="pinCode" type="text" inputmode="numeric" required>
               </div>
             </div>
 
             <div class="order-summary" id="orderSummary"></div>
-            <div class="payment-placeholder">
-              Razorpay/UPI payment integration is prepared for a future backend connection.
+            <div class="payment-placeholder" data-i18n="checkout.paymentHelp">
+              Place your order now and complete payment using the UPI details shown below.
             </div>
-            <button class="btn-primary" type="submit">Place Order</button>
+            <div class="manual-payment-card hidden" id="manualPaymentCard" aria-live="polite"></div>
+            <button class="btn-primary" type="submit" data-i18n="checkout.placeOrder">Place Order</button>
             <p id="checkoutStatus" class="form-status" aria-live="polite"></p>
           </form>
         </div>
@@ -234,66 +225,70 @@
 
     <section id="how-it-works" class="workflow section-pad reveal">
       <div class="container section-head">
-        <p class="eyebrow">How It Works</p>
-        <h2>From Soil Data to Better Farming</h2>
+        <p class="eyebrow" data-i18n="workflow.eyebrow">How It Works</p>
+        <h2 data-i18n="workflow.title">From Soil Data to Better Farming</h2>
       </div>
       <div class="container steps">
         <div class="step">
           <span>01</span>
-          <p>Farmer submits soil details</p>
+          <p data-i18n="workflow.step1">Farmer submits soil details</p>
         </div>
         <div class="step">
           <span>02</span>
-          <p>Soilixa analyzes data</p>
+          <p data-i18n="workflow.step2">Soilixa analyzes data</p>
         </div>
         <div class="step">
           <span>03</span>
-          <p>Expert-backed recommendations provided</p>
+          <p data-i18n="workflow.step3">Expert-backed recommendations provided</p>
         </div>
         <div class="step">
           <span>04</span>
-          <p>Continuous guidance during crop cycle</p>
+          <p data-i18n="workflow.step4">Continuous guidance during crop cycle</p>
         </div>
       </div>
     </section>
 
     <section id="why-us" class="why-us section-pad reveal">
       <div class="container section-head">
-        <p class="eyebrow">Why Choose Us</p>
-        <h2>Built for Real Farm Challenges</h2>
+        <p class="eyebrow" data-i18n="whyUs.eyebrow">Why Choose Us</p>
+        <h2 data-i18n="whyUs.title">Built for Real Farm Challenges</h2>
       </div>
       <div class="container why-grid">
-        <div class="why-item">Scientific approach</div>
-        <div class="why-item">Expert-backed advice</div>
-        <div class="why-item">Focus on real farmer problems</div>
-        <div class="why-item">Simple and easy guidance</div>
+        <div class="why-item" data-i18n="whyUs.item1">Scientific approach</div>
+        <div class="why-item" data-i18n="whyUs.item2">Expert-backed advice</div>
+        <div class="why-item" data-i18n="whyUs.item3">Focus on real farmer problems</div>
+        <div class="why-item" data-i18n="whyUs.item4">Simple and easy guidance</div>
       </div>
     </section>
 
     <section id="contact" class="contact section-pad reveal">
       <div class="container section-head">
-        <p class="eyebrow">Contact Us</p>
-        <h2>Let’s Improve Your Next Crop Cycle</h2>
+        <p class="eyebrow" data-i18n="contact.eyebrow">Contact Us</p>
+        <h2 data-i18n="contact.title">🌱 Contact Soilixa</h2>
+      </div>
+      <div class="container contact-intro">
+        <p class="contact-subtitle" data-i18n="contact.subtitle">Have questions about fertilizers, organic farming, or your order?</p>
+        <p class="contact-support" data-i18n="contact.support">Our team is ready to help you.</p>
       </div>
       <div class="container contact-details">
-        <p><strong>Email:</strong> info@soilixa.com</p>
-        <p><strong>Phone:</strong> 9164501758</p>
+        <p><strong data-i18n="contact.phoneLabel">📞 Phone</strong> +91 96064241XX</p>
+        <p><strong data-i18n="contact.emailLabel">✉️ Email</strong> info@soilixa.com</p>
       </div>
       <div class="container form-shell">
         <form id="contactForm" novalidate>
-          <label for="name">Name</label>
-          <input id="name" name="name" type="text" placeholder="Your Name" required>
+          <label for="name" data-i18n="contact.formName">Name</label>
+          <input id="name" name="name" type="text" placeholder="Your Name" data-i18n-placeholder="contact.formNamePlaceholder" required>
 
-          <label for="phone">Phone</label>
-          <input id="phone" name="phone" type="tel" placeholder="Your Phone Number" required>
+          <label for="phone" data-i18n="contact.formPhone">Phone</label>
+          <input id="phone" name="phone" type="tel" placeholder="Your Phone Number" data-i18n-placeholder="contact.formPhonePlaceholder" required>
 
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" placeholder="you@example.com" required>
+          <label for="email" data-i18n="contact.formEmail">Email</label>
+          <input id="email" name="email" type="email" placeholder="you@example.com" data-i18n-placeholder="contact.formEmailPlaceholder" required>
 
-          <label for="message">Message</label>
-          <textarea id="message" name="message" rows="4" placeholder="Tell us about your farm needs" required></textarea>
+          <label for="message" data-i18n="contact.formMessage">Message</label>
+          <textarea id="message" name="message" rows="4" placeholder="Tell us about your farm needs" data-i18n-placeholder="contact.formMessagePlaceholder" required></textarea>
 
-          <button class="btn-primary" type="submit">Submit</button>
+          <button class="btn-primary" type="submit" data-i18n="contact.submit">Submit</button>
           <p id="formStatus" class="form-status" aria-live="polite"></p>
         </form>
       </div>
@@ -303,7 +298,7 @@
   <footer class="site-footer">
     <div class="container footer-wrap">
       <p class="footer-brand">Soilixa</p>
-      <p>Empowering Farmers with Smart Decisions</p>
+      <p data-i18n="footer.copy">Empowering Farmers with Smart Decisions</p>
     </div>
   </footer>
 
