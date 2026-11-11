@@ -1,0 +1,10 @@
+# Static frontend on Netlify. API lives on Render (see frontend/js/config.js).
+[build]
+  publish = "frontend"
+  # No build command — plain HTML/CSS/JS
+
+# Fallback for unknown paths. Existing files (checkout.html, js/*, css/*) still win.
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

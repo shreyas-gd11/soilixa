@@ -1,0 +1,15 @@
+{
+  "crops": ["Rice", "Ragi", "Maize", "Sugarcane", "Cotton", "Vegetables", "Other"],
+  "soilTypes": ["Red soil", "Black soil", "Sandy soil", "Clay soil", "Loamy soil", "Not sure"],
+  "stages": ["Before sowing", "Early growth", "Vegetative growth", "Flowering", "Fruit or grain formation"],
+  "recommendations": {
+    "default": ["Soil test before choosing an input", "Discuss an organic soil conditioner with a local advisor"],
+    "Rice": ["Soil-test-led nutrient plan", "Crop-stage appropriate organic inputs"],
+    "Ragi": ["Soil-test-led nutrient plan", "Organic matter and soil health inputs"],
+    "Maize": ["Soil-test-led nutrient plan", "Crop-stage appropriate organic inputs"],
+    "Sugarcane": ["Soil-test-led nutrient plan", "Organic matter and soil health inputs"],
+    "Cotton": ["Soil-test-led nutrient plan", "Crop-stage appropriate organic inputs"],
+    "Vegetables": ["Soil-test-led nutrient plan", "Crop-specific organic inputs"]
+  },
+  "note": "Suggestions are discussion categories, not a product or dose prescription. Confirm based on soil analysis and local agronomy advice."
+}

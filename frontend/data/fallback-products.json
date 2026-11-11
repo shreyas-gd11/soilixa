@@ -1,0 +1,5 @@
+[
+  {"id":"fallback-defence-g","name":"DEFENSE (G)","category":"Organic Manure","description":"Bio-enriched organic manure. Confirm availability and crop suitability with Soilixa.","price":1378,"unit":"50 kg","image_url":"images/default-fertilizer.png","is_available":true,"recommended_crops":["All crops","Sugarcane","Vegetables"]},
+  {"id":"fallback-azois","name":"AZOIS","category":"Biofertilizers","description":"Azospirillum biofertilizer. Ask for crop-specific guidance before application.","price":438,"unit":"1 kg","image_url":"images/default-fertilizer.png","is_available":true,"recommended_crops":["All crops"]},
+  {"id":"fallback-borax","name":"BORAX","category":"Micronutrients","description":"Boron micronutrient. Ask Soilixa to confirm need and application guidance.","price":855,"unit":"1 kg","image_url":"images/default-fertilizer.png","is_available":true,"recommended_crops":["All crops","Vegetables","Fruit crops"]}
+]
