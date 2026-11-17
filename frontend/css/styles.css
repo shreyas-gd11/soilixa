@@ -266,6 +266,13 @@ h1 {
   box-shadow: 0 10px 20px rgba(33, 80, 37, 0.25);
 }
 
+.btn-primary:disabled {
+  background: #8b9389;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
 .btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -604,6 +611,12 @@ h2 {
 
 .product-meta span {
   color: var(--text-muted);
+}
+
+.product-stock-status {
+  margin: 0 0 0.75rem;
+  color: var(--text-muted);
+  font-size: 0.88rem;
 }
 
 .product-meta strong,

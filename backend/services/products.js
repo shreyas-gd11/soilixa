@@ -8,20 +8,34 @@ async function fetchAvailableProducts() {
 
   console.info('[Soilixa] Querying products where is_available = true');
 
-  const { data, error } = await supabasePublic
-    .from('products')
-    .select('*')
-    .eq('is_available', true)
-    .order('created_at', { ascending: false });
+  // PostgREST applies a maximum response size (commonly 1,000 rows). Fetch
+  // explicitly in pages so larger catalogs are not silently truncated.
+  const pageSize = 1000;
+  const data = [];
+  let from = 0;
 
-  if (error) {
-    console.error('[Soilixa] Supabase products query failed:', {
-      message: error.message,
-      code: error.code,
-      details: error.details,
-      hint: error.hint
-    });
-    throw error;
+  while (true) {
+    const { data: page, error } = await supabasePublic
+      .from('products')
+      .select('*')
+      .eq('is_available', true)
+      .order('created_at', { ascending: false })
+      .order('id', { ascending: true })
+      .range(from, from + pageSize - 1);
+
+    if (error) {
+      console.error('[Soilixa] Supabase products query failed:', {
+        message: error.message,
+        code: error.code,
+        details: error.details,
+        hint: error.hint
+      });
+      throw error;
+    }
+
+    data.push(...page);
+    if (page.length < pageSize) break;
+    from += pageSize;
   }
 
   console.info('[Soilixa] Products fetched:', Array.isArray(data) ? data.length : 0);

@@ -382,12 +382,12 @@ async function loadFertilizers() {
     console.info('[Soilixa] Products received:', data.length);
 
     const normalizedProducts = data.map(normalizeProductRecord);
-    const availableProducts = normalizedProducts.filter(
-      (item) => item.is_available && (item.stock_quantity > 0 || item.fallback)
-    );
+    // Availability controls whether a product belongs in the catalog. Stock
+    // controls whether it can be purchased; zero-stock items remain visible.
+    const availableProducts = normalizedProducts.filter((item) => item.is_available);
 
     if (normalizedProducts.length && !availableProducts.length) {
-      console.warn('[Soilixa] All products filtered out. Need is_available=true and stock_quantity > 0.', {
+      console.warn('[Soilixa] No available products found. Check is_available on the product records.', {
         total: normalizedProducts.length,
         sample: normalizedProducts.slice(0, 3).map((p) => ({
           id: p.id,
@@ -403,7 +403,7 @@ async function loadFertilizers() {
     if (!fertilizers.length) {
       throw new Error(
         data.length
-          ? 'Products were returned but none are available with stock_quantity > 0.'
+          ? 'Products were returned but none are marked available.'
           : 'No available products found.'
       );
     }
@@ -726,9 +726,10 @@ function createProductCard(product, compact = false) {
         <span>${product.unit}</span>
         <strong>${formatPrice(product.price)}</strong>
       </div>
+      ${product.stock_quantity > 0 ? '' : '<p class="product-stock-status" role="status">Currently out of stock</p>'}
       <div class="product-actions">
         <button class="btn-secondary" type="button" data-view-product="${product.id}">View Details</button>
-        <button class="btn-primary" type="button" data-buy-product="${product.id}">Buy Now</button>
+        <button class="btn-primary" type="button" data-buy-product="${product.id}" ${product.stock_quantity > 0 ? '' : 'disabled'}>${product.stock_quantity > 0 ? 'Buy Now' : 'Out of Stock'}</button>
       </div>
     </article>
   `;
@@ -767,7 +768,7 @@ function renderProductDetail(id) {
         <label class="quantity-label" for="detailQty">Quantity</label>
         <div class="quantity-row">
           <input id="detailQty" type="number" min="1" value="1">
-          <button class="btn-primary" type="button" data-buy-product="${product.id}" data-use-detail-qty="true">Buy Now</button>
+          <button class="btn-primary" type="button" data-buy-product="${product.id}" data-use-detail-qty="true" ${product.stock_quantity > 0 ? '' : 'disabled'}>${product.stock_quantity > 0 ? 'Buy Now' : 'Out of Stock'}</button>
         </div>
       </div>
     </div>
