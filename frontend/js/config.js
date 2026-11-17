@@ -9,7 +9,7 @@ const SOILIXA_CONFIG = Object.freeze({ apiBaseUrl: (function () {
   }
 
   return 'https://soilixa.onrender.com';
-})(), whatsappNumber: 'TODO-WHATSAPP-NUMBER', contactEmail: 'TODO-CONTACT-EMAIL', upiId: 'TODO-UPI-ID', policyVersion: '2026-11-07-v1' });
+})(), whatsappNumber: 'TODO-WHATSAPP-NUMBER', contactEmail: 'TODO-CONTACT-EMAIL', policyVersion: '2026-11-07-v1' });
 const API_BASE_URL = SOILIXA_CONFIG.apiBaseUrl;
 window.SOILIXA_CONFIG = SOILIXA_CONFIG;
 

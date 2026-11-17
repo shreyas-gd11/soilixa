@@ -12,7 +12,7 @@
   <meta property="og:url" content="https://soilixa.com/">
   <meta property="og:type" content="website">
   <meta property="og:image" content="https://soilixa.com/images/hero-farm-placeholder.svg">
-  <meta property="og:image:alt" content="Illustrated placeholder for a Karnataka farm photo">
+  <meta property="og:image:alt" content="Illustrated green farmland at sunset">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Soilixa | Smart Farming Starts Here">
   <meta name="twitter:description" content="Soilixa helps farmers improve crop yield with smart soil analysis, fertilizer recommendations, crop guidance, and precision agriculture solutions.">
@@ -107,7 +107,7 @@
       </div>
       <div class="container cards-grid">
         <article class="card">
-          <picture><source srcset="images/service-soil.webp" type="image/webp"><img src="images/service-soil-placeholder.svg" alt="Placeholder for a farmer collecting a soil sample" width="900" height="650" loading="lazy"></picture>
+          <picture><img src="images/service-soil-placeholder.svg" alt="Illustration of soil sample collection and plant roots" width="900" height="650" loading="lazy"></picture>
           <div class="icon-wrap">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M4 18h16M7 14l2-2 3 2 5-5"></path>
@@ -119,7 +119,7 @@
         </article>
 
         <article class="card">
-          <picture><source srcset="images/service-crop.webp" type="image/webp"><img src="images/service-crop-placeholder.svg" alt="Placeholder for a farmer inspecting crops" width="900" height="650" loading="lazy"></picture>
+          <picture><img src="images/service-crop-placeholder.svg" alt="Illustration of healthy crop rows" width="900" height="650" loading="lazy"></picture>
           <div class="icon-wrap">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 3v18"></path>
@@ -132,7 +132,7 @@
         </article>
 
         <article class="card">
-          <picture><source srcset="images/service-fertilizer.webp" type="image/webp"><img src="images/service-fertilizer-placeholder.svg" alt="Placeholder for organic farm inputs" width="900" height="650" loading="lazy"></picture>
+          <picture><img src="images/service-fertilizer-placeholder.svg" alt="Illustration of an organic plant nutrient bottle" width="900" height="650" loading="lazy"></picture>
           <div class="icon-wrap">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 2v6"></path>
@@ -236,10 +236,12 @@
             <div class="order-summary" id="orderSummary"></div>
             <label class="consent-control"><input type="checkbox" name="privacy_consent" required> I agree to the <a href="privacy.html" target="_blank">Privacy Policy</a> and allow Soilixa to contact me by call/WhatsApp about my request.</label>
             <input type="hidden" name="consent_policy_version" value="2026-11-07-v1">
-            <div class="payment-placeholder" data-i18n="checkout.paymentHelp">
-              Place your order now and complete payment using the UPI details shown below.
-            </div>
-            <div class="manual-payment-card hidden" id="manualPaymentCard" aria-live="polite"></div>
+            <fieldset class="payment-options">
+              <legend>Payment method</legend>
+              <label><input type="radio" name="payment_method" value="cash_on_delivery" checked> Cash on Delivery</label>
+              <label><input type="radio" name="payment_method" value="online_contact"> Online payment — contact Soilixa for payment details</label>
+              <p>Place your order to receive your order bill. Soilixa will contact you to confirm delivery and billing. Do not send online payment until Soilixa confirms the payment details.</p>
+            </fieldset>
             <button class="btn-secondary" type="button" id="editDelivery">Back to delivery details</button>
             <button class="btn-primary" type="submit" data-i18n="checkout.placeOrder">Place Order</button>
             </div>
@@ -284,7 +286,7 @@
         <div class="why-item" data-i18n="whyUs.item3">Focus on real farmer problems</div>
         <div class="why-item" data-i18n="whyUs.item4">Simple and easy guidance</div>
       </div>
-      <div class="container"><picture><source srcset="images/why-soilixa.webp" type="image/webp"><img src="images/why-soilixa-placeholder.svg" alt="Placeholder for a Soilixa team member speaking with a farmer" width="1200" height="850" loading="lazy"></picture></div>
+      <div class="container"><picture><img src="images/why-soilixa-placeholder.svg" alt="Illustration of a young plant growing across green fields" width="1200" height="850" loading="lazy"></picture></div>
     </section>
 
     <section id="soil-test-request" class="contact section-pad reveal">

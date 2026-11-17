@@ -41,9 +41,9 @@ let currentLanguage = localStorage.getItem("soilixaLanguage") || "en";
 
 const formatPrice = (price) => `₹${Number(price).toLocaleString("en-IN")}`;
 const normalize = (value) => String(value || "").toLowerCase();
-const defaultProductImage = "images/default-fertilizer.png";
+const defaultProductImage = "images/default-fertilizer.svg";
 const normalizeProductId = (value) => String(value ?? "").trim();
-const imageFallback = "this.onerror = null; this.src = 'images/default-fertilizer.png';";
+const imageFallback = "this.onerror = null; this.src = 'images/default-fertilizer.svg';";
 
 if (navToggle && navLinks) {
   navToggle.addEventListener("click", () => {
@@ -143,7 +143,6 @@ const translations = {
     "checkout.district": "District",
     "checkout.state": "State",
     "checkout.pinCode": "PIN Code",
-    "checkout.paymentHelp": "Place your order now and complete payment using the UPI details shown below.",
     "checkout.placeOrder": "Place Order",
     "workflow.eyebrow": "How It Works",
     "workflow.title": "From Soil Data to Better Farming",
@@ -228,7 +227,6 @@ const translations = {
     "checkout.district": "ಜಿಲ್ಲೆ",
     "checkout.state": "ರಾಜ್ಯ",
     "checkout.pinCode": "ಪಿನ್ ಕೋಡ್",
-    "checkout.paymentHelp": "ನಿಮ್ಮ ಆರ್ಡರ್ ಅನ್ನು ಈಗದ್ವಾರಾ ಇರಿಸಿ ಮತ್ತು ಕೆಳಗಿನ ಯುಪಿಐ ವಿವರಗಳನ್ನು ಬಳಸಿ ಪಾವತಿಯನ್ನು ಪೂರ್ಣಗೊಳಿಸಿ.",
     "checkout.placeOrder": "ಆರ್ಡರ್ ಹಾಕಿ",
     "workflow.eyebrow": "ಇದು ಹೇಗೆ ಕೆಲಸ ಮಾಡುತ್ತದೆ",
     "workflow.title": "ಮಣ್ಣಿನ ಡೇಟಾದಿಂದ ಉತ್ತಮ ಕೃಷಿಗೆ",
@@ -436,8 +434,9 @@ function computeTotals() {
   return Number(total.toFixed(2));
 }
 
-const UPI_ID = window.SOILIXA_CONFIG?.upiId || 'TODO-UPI-ID';
 const WHATSAPP_NUMBER = window.SOILIXA_CONFIG?.whatsappNumber || 'TODO-WHATSAPP';
+const CONTACT_EMAIL = window.SOILIXA_CONFIG?.contactEmail || 'TODO-CONTACT-EMAIL';
+const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 document.querySelectorAll('[data-wa-link]').forEach((link) => {
   if (/^\+?\d{10,15}$/.test(WHATSAPP_NUMBER.replace(/\s/g, ''))) link.href = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}`;
 });
@@ -487,37 +486,13 @@ async function saveOrderToServer(orderPayload) {
   return resp.json();
 }
 
-function showManualPaymentCard(orderNumber) {
-  const card = document.getElementById('manualPaymentCard');
-  if (!card) return;
-
-  card.classList.remove('hidden');
-  card.innerHTML = `
-    <div class="manual-payment-grid">
-      <div class="manual-payment-qr">
-        <p class="manual-payment-id">UPI ID: <strong>${UPI_ID}</strong></p><button type="button" class="btn-secondary" id="copyUpi">Copy UPI ID</button>
-      </div>
-      <div class="manual-payment-details">
-        <p><strong>Order ID:</strong> ${orderNumber}</p>
-        <p>Please complete your payment using the UPI ID above.</p>
-        <div class="warning-card">
-          <p><strong>⚠️ PAYMENT CONFIRMATION REQUIRED</strong></p>
-          <p>After completing your payment, send the payment screenshot on WhatsApp: <strong>${WHATSAPP_NUMBER}</strong></p>
-          <p><strong>Call this number to confirm your order.</strong></p>
-          <p><strong>Please mention your Order ID while sending the payment screenshot.</strong></p>
-          <a class="btn-secondary" data-payment-link href="#contact">Send payment screenshot on WhatsApp</a>
-          <p>Your order will be verified manually and confirmed once the payment is received.</p>
-        </div>
-      </div>
-    </div>
-  `;
-  card.querySelector('#copyUpi')?.addEventListener('click', async () => {
-    try { await navigator.clipboard.writeText(UPI_ID); card.querySelector('#copyUpi').textContent = 'Copied'; } catch { card.querySelector('#copyUpi').textContent = 'Select and copy the UPI ID'; }
-  });
-  const paymentLink = card.querySelector('[data-payment-link]');
-  if (paymentLink && /^\+?\d{10,15}$/.test(WHATSAPP_NUMBER.replace(/\s/g, ''))) {
-    paymentLink.href = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}?text=${encodeURIComponent(`Hello Soilixa, I have paid for order ${orderNumber}. I am sending the payment screenshot.`)}`;
-  }
+function getSoilixaContactMarkup() {
+  const phone = /^\+?[0-9\s()-]{10,20}$/.test(WHATSAPP_NUMBER) ? WHATSAPP_NUMBER.trim() : '';
+  const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(CONTACT_EMAIL) ? CONTACT_EMAIL : '';
+  const links = [];
+  if (phone) links.push(`<a href="tel:${escapeHtml(phone.replace(/[\s()-]/g, ''))}">${escapeHtml(phone)}</a>`);
+  if (email) links.push(`<a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a>`);
+  return links.length ? `<p><strong>Contact Soilixa:</strong> ${links.join(' · ')}</p>` : '<p>Soilixa will contact you using the phone number provided to confirm billing and delivery.</p>';
 }
 
 const summaryEl = document.getElementById('checkoutSummary');
@@ -588,7 +563,7 @@ if (checkoutForm) {
         consent_timestamp: consentTimestamp,
         consent_policy_version: form.get('consent_policy_version'),
         total_amount: totalAmount,
-        payment_status: 'Pending Payment',
+        payment_method: form.get('payment_method') || 'cash_on_delivery',
         order_status: 'New',
         items: getCartRows().map((row) => ({ product_id: /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(String(row.product.id)) ? row.product.id : null, name: row.product.name, price: row.product.price, quantity: row.quantity, total: +(row.product.price * row.quantity).toFixed(2) }))
       };
@@ -625,34 +600,44 @@ if (document.location.pathname.endsWith('/order-success.html')) {
     if (!resp.ok) return successMessage.textContent = 'Unable to load order.';
     const data = await resp.json();
     const { order, items } = data;
+    const paymentMethod = order.payment_method === 'online_contact'
+      ? 'Online payment — contact Soilixa'
+      : order.payment_method === 'cash_on_delivery'
+        ? 'Cash on Delivery'
+        : 'Contact Soilixa to confirm the payment method';
     successMessage.innerHTML = `
       <div class="order-success-card">
         <p class="success-icon">✅ Order Placed Successfully</p>
         <p>Thank you for choosing SoiliXa.</p>
-        <p><strong>Order ID:</strong> ${order.order_number}</p>
-        <p>We’ll confirm your order on WhatsApp shortly.</p>
-        <p><strong>WhatsApp:</strong> ${WHATSAPP_NUMBER}</p>
-        <p><strong>Call:</strong> ${WHATSAPP_NUMBER}</p>
+        <p><strong>Order ID:</strong> ${escapeHtml(order.order_number)}</p>
+        <p><strong>Payment method:</strong> ${paymentMethod}</p>
+        <p>Your order bill is below. Soilixa will contact you to confirm the final bill and delivery. For online payment, contact Soilixa and wait for confirmed payment details.</p>
+        ${getSoilixaContactMarkup()}
       </div>
     `;
-    showManualPaymentCard(order.order_number);
     orderDetails.innerHTML = `
-      <h3>Order Details</h3>
-      <p>${order.customer_name} · ${order.phone}</p>
-      <p>${order.address}</p>
-      <div>${items.map(it=>`<p>${it.product_name} x ${it.quantity} · ₹${it.total}</p>`).join('')}</div>
-      <p>Total Amount: ₹${order.total_amount}</p>
-      <p><strong>Order Status:</strong> ${order.order_status || 'New'}</p>
+      <section class="order-bill">
+        <h2>Order Bill</h2>
+        <p><strong>Bill reference:</strong> ${escapeHtml(order.order_number)} · <strong>Date:</strong> ${escapeHtml(new Date(order.created_at).toLocaleDateString('en-IN'))}</p>
+        <p><strong>Customer:</strong> ${escapeHtml(order.customer_name)} · ${escapeHtml(order.phone)}</p>
+        <p><strong>Delivery address:</strong> ${escapeHtml(order.address)}, ${escapeHtml([order.village, order.taluk, order.district, order.state, order.pincode].filter(Boolean).join(', '))}</p>
+        <div class="order-bill-items"><p><strong>Item</strong><strong>Amount</strong></p>
+          ${items.map((it) => `<p><span>${escapeHtml(it.product_name)} × ${escapeHtml(it.quantity)}</span><span>₹${Number(it.total).toLocaleString('en-IN')}</span></p>`).join('')}
+        </div>
+        <p class="order-bill-total"><strong>Order total</strong><strong>₹${Number(order.total_amount).toLocaleString('en-IN')}</strong></p>
+        <p><strong>Payment:</strong> ${paymentMethod}</p>
+        <p class="bill-note">This is an order bill, not a final tax invoice. Soilixa will contact you to confirm the final billing details.</p>
+      </section>
     `;
 
     downloadInvoice?.addEventListener('click', async () => {
       const invResp = await fetch(`${API_BASE_URL}/api/orders/${encodeURIComponent(orderNum)}/invoice`);
-      if (!invResp.ok) return alert('Unable to download invoice');
+      if (!invResp.ok) return alert('Unable to download your order bill');
       const blob = await invResp.blob();
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `Invoice-${order.order_number}.pdf`;
+      a.download = `Order-Bill-${order.order_number}.pdf`;
       document.body.appendChild(a);
       a.click();
       a.remove();

@@ -44,7 +44,7 @@ create table if not exists orders (
   gst numeric(12,2),
   total_amount numeric(12,2),
   payment_status text default 'Pending Payment Verification',
-  payment_method text default 'UPI',
+  payment_method text default 'cash_on_delivery',
   order_status text default 'New',
   consent boolean not null default false,
   consent_timestamp timestamptz,
@@ -78,6 +78,8 @@ create table if not exists farmer_requests (
   consent_policy_version text not null,
   created_at timestamptz not null default now()
 );
+
+alter table orders alter column payment_method set default 'cash_on_delivery';
 
 alter table orders add column if not exists consent boolean not null default false;
 alter table orders add column if not exists consent_timestamp timestamptz;

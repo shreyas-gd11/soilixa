@@ -43,7 +43,8 @@ async function createOrder(payload) {
       consent_timestamp: payload.consent_timestamp,
       consent_policy_version: payload.consent_policy_version,
       total_amount: totalAmount,
-      payment_status: payload.payment_status || 'Pending Payment',
+      payment_method: payload.payment_method,
+      payment_status: payload.payment_method === 'cash_on_delivery' ? 'Pending - Cash on Delivery' : 'Pending - Contact Soilixa for Online Payment',
       order_status: payload.order_status || 'New'
     };
 

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 650" role="img" aria-label="Soilixa organic plant nutrition illustration">
+  <rect width="900" height="650" rx="32" fill="#f0f2e9"/>
+  <circle cx="695" cy="155" r="92" fill="#ead1a7"/>
+  <path d="M0 455c140-66 265-52 390 0s260 62 510-26v221H0z" fill="#dbe5d6"/>
+  <path d="M0 525c180-65 315-30 455 7s270 28 445-34v152H0z" fill="#b5c9ad"/>
+  <path d="M350 265h200l-18 290H368z" fill="#a76645"/>
+  <path d="M385 215h130v56H385z" rx="12" fill="#39734f"/>
+  <path d="M450 360c-82-66-104-151-44-172 42-15 59 44 44 172Zm0 0c78-78 155-104 168-53 13 49-64 75-168 53Z" fill="#6b9a69"/>
+  <path d="M450 360v-93" fill="none" stroke="#1f4935" stroke-width="13" stroke-linecap="round"/>
+  <path d="M418 418h64" stroke="#ead1a7" stroke-width="15" stroke-linecap="round"/>
+</svg>
