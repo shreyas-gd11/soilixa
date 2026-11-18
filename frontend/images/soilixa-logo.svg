@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 220" role="img" aria-labelledby="title desc">
+  <title id="title">Soilixa</title>
+  <desc id="desc">Soilixa, Healthy Soil Better Crop, with a seedling, soil layers and a soil testing flask.</desc>
+  <defs>
+    <linearGradient id="word" x2="1" y2="1"><stop stop-color="#267d22"/><stop offset=".72" stop-color="#245b17"/><stop offset="1" stop-color="#79421d"/></linearGradient>
+    <linearGradient id="soil" x2="0" y2="1"><stop stop-color="#7b451f"/><stop offset="1" stop-color="#422719"/></linearGradient>
+    <linearGradient id="glass" x2="1"><stop stop-color="#d7f4ec"/><stop offset=".48" stop-color="#fff"/><stop offset="1" stop-color="#9dc9c5"/></linearGradient>
+  </defs>
+  <path d="M20 129Q100 99 181 126T341 124L408 142Q338 153 264 142T110 145Q55 143 20 129Z" fill="#248d22"/>
+  <path d="M20 139Q103 120 178 147T344 142L398 158Q309 167 235 153T102 162Q52 157 20 139Z" fill="url(#soil)" stroke="#bf7b39" stroke-width="4"/>
+  <path d="M38 150q32-7 62 2m45 1q33-9 60 1m26 2q28-8 48-2" fill="none" stroke="#e7bd65" stroke-width="3" stroke-linecap="round"/>
+  <text x="20" y="109" font-family="Georgia,serif" font-size="88" font-weight="700" letter-spacing="-7" fill="url(#word)">Soilixa</text>
+  <path d="M190 36q40-8 52-34-2 34-44 44Z" fill="#4b9c19"/>
+  <path d="M189 48q21-19 45-38" fill="none" stroke="#236a20" stroke-width="4"/>
+  <path d="M377 39h48v18l-8 11v65a19 19 0 0 1-19 19h-3a19 19 0 0 1-19-19V68l-8-11V39Z" fill="url(#glass)" stroke="#527976" stroke-width="6"/>
+  <path d="M380 111q20-8 42 0v21a15 15 0 0 1-15 15h-12a15 15 0 0 1-15-15Z" fill="#70401e"/>
+  <path d="M398 112q-4-24 13-35m-12 31q-24-4-28-22 22 1 29 22m1-13q12-22 30-19-8 18-30 22" fill="#459822" stroke="#286c25" stroke-width="3"/>
+  <circle cx="440" cy="95" r="37" fill="#e9fbf5" fill-opacity=".8" stroke="#364749" stroke-width="8"/>
+  <circle cx="440" cy="95" r="29" fill="none" stroke="#9dd4d0" stroke-width="4"/>
+  <path d="m466 122 31 38q6 9-4 15l-4 2q-9 5-15-4l-28-41" fill="#414a4c" stroke="#263638" stroke-width="5"/>
+  <path d="M50 181q12-15 27-14-4 16-25 18m5-1q-13-12-27-9 8 14 27 14" fill="#338c20"/>
+  <text x="94" y="196" font-family="Arial,sans-serif" font-size="28" font-weight="700" fill="#343b3d">Healthy Soil, Better Crop.</text>
+</svg>
