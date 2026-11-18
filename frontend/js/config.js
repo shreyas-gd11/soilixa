@@ -1,30 +1,3 @@
-// Configure the backend API URL for local development and production.
-// Configure the single API endpoint here after the Render service is live.
-const SOILIXA_CONFIG = Object.freeze({ apiBaseUrl: (function () {
-  const hostname = window.location.hostname || '';
-  const isLocalFile = window.location.protocol === 'file:' || !hostname;
-
-  if (isLocalFile || ['localhost', '127.0.0.1'].includes(hostname)) {
-    return 'http://localhost:3000';
-  }
-
-  return 'https://soilixa.onrender.com';
-})(), whatsappNumber: 'TODO-WHATSAPP-NUMBER', contactEmail: 'TODO-CONTACT-EMAIL', policyVersion: '2026-11-07-v1' });
-const API_BASE_URL = SOILIXA_CONFIG.apiBaseUrl;
+// Public browser settings only. Supabase anon key is intentionally public; never place the service-role key here.
+const SOILIXA_CONFIG = Object.freeze({ supabaseUrl: 'https://cuonzshgmryguoauljoh.supabase.co', supabaseAnonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN1b256c2hnbXJ5Z3VvYXVsam9oIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU5MTI2NzMsImV4cCI6MjEwMTQ4ODY3M30.YUABC8rGW7fg6dXsPiBQiNGaRreeFcWfNmVPSNKpPCA', whatsappNumber: '919164501758', contactEmail: 'info@soilixa.com', consentPolicyVersion: '2026-11-18-v1', apiBaseUrl: (['localhost','127.0.0.1'].includes(window.location.hostname) ? 'http://localhost:3000' : 'https://soilixa.onrender.com') });
 window.SOILIXA_CONFIG = SOILIXA_CONFIG;
-
-(function warnIfApiBaseUrlUnset() {
-  const isPlaceholder = !API_BASE_URL
-    || API_BASE_URL.includes('YOUR-SOILIXA-BACKEND')
-    || API_BASE_URL.includes('example.com');
-
-  if (isPlaceholder) {
-    console.error(
-      '[Soilixa] API_BASE_URL is still a placeholder:',
-      API_BASE_URL,
-      '\nSet apiBaseUrl in js/config.js to the deployed Render service, then redeploy Netlify.'
-    );
-  } else {
-    console.info('[Soilixa] API_BASE_URL =', API_BASE_URL);
-  }
-})();

@@ -87,11 +87,33 @@ alter table orders add column if not exists consent_policy_version text;
 
 -- Products are publicly readable only when available. Product queries use the anon key.
 alter table products enable row level security;
-revoke insert, update, delete on products from anon, authenticated;
+revoke all on products from anon, authenticated;
 grant select on products to anon, authenticated;
+drop policy if exists "Allow insert products" on products;
+drop policy if exists "Allow update products" on products;
+drop policy if exists "Anyone can view products" on products;
+drop policy if exists "Public can read products" on products;
 drop policy if exists "Public read available products" on products;
 create policy "Public read available products"
   on products
   for select
   to anon, authenticated
   using (is_available = true);
+
+-- Public contact form inserts only consented requests. Public clients cannot read or alter submissions.
+alter table farmer_requests enable row level security;
+revoke all on farmer_requests from anon, authenticated;
+grant insert on farmer_requests to anon;
+drop policy if exists "Public contact request insert" on farmer_requests;
+create policy "Public contact request insert"
+  on farmer_requests
+  for insert
+  to anon
+  with check (
+    consent = true
+    and phone ~ '^[6-9][0-9]{9}$'
+    and length(trim(name)) between 1 and 120
+    and length(trim(message)) between 1 and 2000
+    and consent_timestamp is not null
+    and consent_policy_version is not null
+  );

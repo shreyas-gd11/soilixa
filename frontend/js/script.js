@@ -98,7 +98,7 @@ const translations = {
     "nav.contact": "Contact",
     "nav.cart": "Cart",
     "hero.eyebrow": "Data-Driven Agriculture",
-    "hero.title": "Healthy Soil, Better Crop.",
+    "hero.title": "# Healthy Soil,\nBetter Crop.",
     "hero.subtitle": "Soil testing, crop guidance, and practical agriculture support for farmers.",
     "hero.cta": "Get Started",
     "promise.title": "Our Promise to Farmers",
@@ -182,7 +182,7 @@ const translations = {
     "nav.contact": "ಸಂಪರ್ಕ",
     "nav.cart": "ಗಾಡಿ",
     "hero.eyebrow": "ಡೇಟಾ-ಆಧಾರಿತ ಕೃಷಿ",
-    "hero.title": "ಆರೋಗ್ಯಕರ ಮಣ್ಣಿನಿಂದ ಚುಚ್ಚುವ ಕೃಷಿ ಪ್ರಾರಂಭವಾಗುತ್ತದೆ",
+    "hero.title": "# ಆರೋಗ್ಯಕರ ಮಣ್ಣು,\nಉತ್ತಮ ಬೆಳೆ.",
     "hero.subtitle": "ಸೊಲಿಕ্সಾ ರೈತರಿಗೆ ಮಣ್ಣಿನ ಪರೀಕ್ಷೆ, ಬೆಳೆ ಮಾರ್ಗದರ್ಶನ ಮತ್ತು ವೈಜ್ಞಾನಿಕ ಕೃಷಿ ಸಲಹೆ ನೀಡುತ್ತದೆ.",
     "hero.cta": "ಪ್ರಾರಂಭಿಸು",
     "promise.title": "ರೈತರಿಗೆ ನಮ್ಮ ಬದ್ಧತೆ",
@@ -262,7 +262,7 @@ const translations = {
 function applyTheme(theme) {
   document.body.dataset.theme = theme;
   if (themeToggle) {
-    themeToggle.textContent = theme === "dark" ? "🌙 Dark" : "☀️ Light";
+    themeToggle.textContent = theme === "dark" ? "☾" : "☼";
     themeToggle.setAttribute("aria-pressed", String(theme === "dark"));
   }
 }
@@ -398,16 +398,8 @@ async function loadFertilizers() {
 
     fertilizers = availableProducts;
 
-    if (!fertilizers.length) {
-      throw new Error(
-        data.length
-          ? 'Products were returned but none are marked available.'
-          : 'No available products found.'
-      );
-    }
-
     console.info('[Soilixa] Products displayed:', fertilizers.length);
-    fertilizerState.textContent = "";
+    fertilizerState.textContent = fertilizers.length ? "" : 'No products are currently available. Please check back soon.';
     renderProducts();
     renderRecommendations("Sugarcane");
     renderCart();
@@ -445,7 +437,7 @@ if (adviceLink && /^\+?\d{10,15}$/.test(WHATSAPP_NUMBER.replace(/\s/g, ''))) {
   adviceLink.href = `https://wa.me/${WHATSAPP_NUMBER.replace(/\D/g, '')}?text=${encodeURIComponent('Hello Soilixa, I would like soil advice for my farm.')}`;
 }
 document.querySelectorAll('[data-contact-phone]').forEach((el) => { if (!WHATSAPP_NUMBER.startsWith('TODO')) el.textContent = WHATSAPP_NUMBER; });
-document.querySelectorAll('[data-contact-email]').forEach((el) => { const value = window.SOILIXA_CONFIG?.contactEmail; if (value && !value.startsWith('TODO')) el.textContent = value; });
+document.querySelectorAll('[data-contact-email]').forEach((el) => { const value = window.SOILIXA_CONFIG?.contactEmail; if (value && !value.startsWith('TODO')) { el.textContent = value; if (el instanceof HTMLAnchorElement) el.href = `mailto:${value}`; } });
 
 async function initFertilizerFinder() {
   const crop = document.getElementById('finderCrop');
@@ -677,7 +669,7 @@ function renderProducts() {
   if (!fertilizers.length) {
     productsGrid.innerHTML = "";
     if (fertilizerState) {
-      fertilizerState.innerHTML = '<div class="state-card error-state">No available fertilizers were loaded.</div>';
+      fertilizerState.textContent = 'No products are currently available. Please check back soon.';
     }
     return;
   }
