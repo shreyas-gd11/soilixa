@@ -1,148 +1,59 @@
 # Soilixa
 
-Smart farming platform with a fertilizer marketplace, cart, checkout, and Supabase-backed order management.
+Bilingual, mobile-first agriculture services and product catalogue for Karnataka farmers.
 
 ## Project structure
 
-```
-Soilixa/
-├── frontend/              # Static site (Netlify)
-│   ├── index.html
-│   ├── checkout.html
-│   ├── order-success.html
-│   ├── css/
-│   ├── js/
-│   │   ├── config.js      # API base URL (update after Render deploy)
-│   │   └── script.js
-│   ├── images/
-│   ├── robots.txt
-│   └── sitemap.xml
-├── backend/               # Express API (Render)
-│   ├── server.js
-│   ├── package.json
-│   ├── .env               # Backend secrets (not committed)
-│   ├── .env.example
-│   ├── api/
-│   ├── routes/
-│   ├── services/
-│   │   └── supabase/
-│   ├── utils/
-│   └── data/
-├── .gitignore
-└── README.md
+- `frontend/` — static site published by Netlify
+- `backend/` — Express API for order management (planned Render deployment)
+
+## Run locally
+
+Serve `frontend/` from a local HTTP server (do not open `index.html` via `file://`):
+
+```powershell
+cd frontend
+python -m http.server 5500
 ```
 
-## Local development
+Open `http://localhost:5500`. The homepage reads products and submits contact requests directly to Supabase using the public anon key in `frontend/js/config.js`. The anon key is expected to be public; never put a Supabase service-role key in frontend code.
 
-### Backend
+## Supabase setup
 
-```bash
-cd backend
-cp .env.example .env
-# Edit .env with your Supabase credentials
-npm install
-npm start
+Run `backend/supabase/schema.sql` in the Supabase SQL editor. The product table is intended to have a public `SELECT` policy limited to `is_available = true`, with no anon/authenticated write grants. The contact form uses an `INSERT`-only policy for consented, length-limited requests; browser clients cannot read or alter lead records. The contact table and insert policy are now installed in the live Supabase project. The repo schema also removes the old broad product policies when applied. Use `frontend/js/config.js` only with the project URL and anon key.
+
+The live `products` table uses `product_name` (not `name`); the browser catalog maps that actual column. The live project still has legacy public product policies; the page currently reads the 10 available products, but apply this SQL in the Supabase SQL editor to remove public product writes and duplicate broad read policies:
+
+```sql
+alter table public.products enable row level security;
+revoke all on public.products from anon, authenticated;
+grant select on public.products to anon, authenticated;
+drop policy if exists "Allow insert products" on public.products;
+drop policy if exists "Allow update products" on public.products;
+drop policy if exists "Anyone can view products" on public.products;
+drop policy if exists "Public can read products" on public.products;
+drop policy if exists "Public read available products" on public.products;
+create policy "Public read available products" on public.products for select to anon, authenticated using (is_available = true);
 ```
 
-API runs at `http://localhost:3000`.
+The product list is fetched when the page opens. Setting `is_available=false` or deleting a product removes it from the catalogue on the next page load/refresh; there is no realtime subscription. The cart is also reconciled with the current catalogue when it loads.
 
-Test health:
+## Netlify
 
-```bash
-curl http://localhost:3000/health
-```
-
-Test products:
-
-```bash
-curl http://localhost:3000/api/products
-```
-
-Create `backend/.env` from `backend/.env.example` and enter rotated credentials. The backend does not read the legacy root `.env`.
-
-### Frontend
-
-Serve the `frontend/` folder with any static file server:
-
-```bash
-# VS Code Live Server (port 5500)
-# or
-npx serve frontend
-```
-
-Open the site in your browser. API calls use `frontend/js/config.js`.
-
-## Environment variables (backend)
-
-| Variable | Description |
-|----------|-------------|
-| `SUPABASE_URL` | Supabase project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service role key (server-only; used for order and request writes) |
-| `SUPABASE_ANON_KEY` | Public anon key used for product reads under read-only RLS |
-| `PORT` | API port (default `3000`; Render sets this automatically) |
-
-Example `backend/.env`:
-
-```env
-SUPABASE_URL=your_supabase_url
-SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
-PORT=3000
-```
-
-Production CORS is restricted to `https://soilixa.com` and `https://www.soilixa.com`. Use the custom domain on Netlify for production traffic.
-
-## API configuration (frontend)
-
-After deploying the backend to Render, set the single `apiBaseUrl` value in `frontend/js/config.js`. Set the WhatsApp number and UPI ID in the same config file.
-
-### Secret exposure
-
-The previously tracked root `.env` and `node_modules` are now untracked and ignored. Treat every credential that was ever in Git as compromised: rotate Supabase keys and any other exposed credentials, then purge `.env` from Git history. History rewrite commands (run only after coordinating with collaborators):
-
-```bash
-git filter-repo --path .env --invert-paths
-git push --force --all
-git push --force --tags
-```
-
-For local development, requests to `localhost` / `127.0.0.1` automatically use `http://localhost:3000`.
-
-## Deployment
-
-### Netlify
+The existing root `netlify.toml` is already configured correctly:
 
 | Setting | Value |
-|---------|-------|
-| Base directory | *(repo root)* |
-| Build command | *(none — static site)* |
+|---|---|
+| Base directory | repository root |
+| Build command | none |
 | Publish directory | `frontend` |
 
-Set `apiBaseUrl`, `whatsappNumber`, and `upiId` in `frontend/js/config.js` after deployment. CORS permits only `soilixa.com` and its `www` subdomain in production; attach the custom domain to Netlify.
+No Netlify path setting change is needed. To deploy, push this repository to the connected Netlify site and trigger a deploy (or let the connected Git deploy run). Confirm the deploy settings above and that the site uses the intended custom domain. The public Supabase URL/anon key are in static browser config, not server environment variables, because this site has no build step. Never add a service-role key to Netlify frontend variables or files.
 
-### Render
+## Backend / orders
 
-| Setting | Value |
-|---------|-------|
-| Root directory | `backend` |
-| Build command | `npm install` |
-| Start command | `npm start` |
+The Express API is not deployed yet. Existing checkout/order endpoints still need the backend deployed before server-backed order placement is available. Deploy `backend/` to Render with `npm install` / `npm start` and configure its Supabase server credentials there. The homepage catalogue and WhatsApp cart order message do not depend on the backend.
 
-Required environment variables on Render:
+## Legal drafts
 
-- `SUPABASE_URL`
-- `SUPABASE_SERVICE_ROLE_KEY`
-- `SUPABASE_ANON_KEY` (products read through the anon key and read-only products RLS)
-
-## API routes
-
-- `GET /health` — health check
-- `GET /api/products` — list available products
-- `GET /api/products/:id` — single product
-- `POST /api/orders` — create order with items
-- `POST /api/requests` — save a contact or soil-test request and consent record
-- `GET /api/orders/:orderNumber` — fetch order
-- `GET /api/orders/:orderNumber/invoice` — download PDF invoice
-
-## Database schema
-
-SQL schema: `backend/supabase/schema.sql` (same schema is mirrored at `backend/services/supabase/schema.sql`). Run it in the Supabase SQL editor.
+`frontend/terms.html` and `frontend/privacy.html` are drafts for lawyer review. Privacy draft proposes retaining contact requests for up to 12 months after the last interaction and acknowledges that deletion automation and final retention policy must be confirmed before publishing.
